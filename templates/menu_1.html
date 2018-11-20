@@ -1,0 +1,60 @@
+
+
+{% for k,item in menu_dict.items %}
+    {% if item.active %}
+    <li class="active">
+        <a href="#" class="dropdown-toggle">
+            <i class="icon-desktop"></i>
+            <span class="menu-text">{{ item.menu_title }}</span>
+
+            <b class="arrow icon-angle-down"></b>
+        </a>
+
+        <ul class="submenu">
+            {% for v in item.children %}
+                <li>
+                    {% if v.active %}
+                        <a href="{{ v.url }}" id="active" >
+                            {{ v.feature }}
+                        </a>
+                    {% else %}
+                        <a href="{{ v.url }}">
+                            {{ v.feature }}
+                        </a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+
+
+        </ul>
+    </li>
+
+    {% else %}
+    <li >
+        <a href="#" class="dropdown-toggle">
+            <i class="icon-desktop"></i>
+            <span class="menu-text">{{ item.menu_title }}</span>
+
+            <b class="arrow icon-angle-down"></b>
+        </a>
+
+        <ul class="submenu">
+            {% for v in item.children %}
+                <li>
+                    {% if v.active %}
+                        <a href="{{ v.url }}" id="active" >
+                            {{ v.feature }}
+                        </a>
+                    {% else %}
+                        <a href="{{ v.url }}">
+                            {{ v.feature }}
+                        </a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+
+
+        </ul>
+    </li>
+    {% endif %}
+{% endfor %}

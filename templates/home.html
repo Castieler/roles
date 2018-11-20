@@ -1,0 +1,19 @@
+{% extends 'base.html'%} #继承那个模板
+{% load staticfiles %}
+{% load mytag %}
+
+{% block title %} 权限管理系统
+{% endblock%}
+
+
+
+{% block left %}
+{% menu_html request %}
+
+
+{% endblock %}
+{% block content %} 主页面{% endblock %}
+
+{% block username %} {{ request.session.username }}{% endblock %}
+
+{% block head_menu_name %} home {% endblock %}
