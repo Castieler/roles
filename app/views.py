@@ -21,7 +21,10 @@ def validate(fun):
 
 def save_request_url(fun):
     def inner(request, *args, **kwargs):
-        last_url = request.session['url'] or '/home'
+        try:
+            last_url = request.session['url']
+        except:
+            last_url= "/home/"
         request.session['url'] = request.path_info
         return fun(request, last_url, *args, **kwargs)
 
@@ -87,7 +90,7 @@ def regist(request):
 
 @cache_page(100)
 @save_request_url
-def set_password(request):
+def set_password(request,last_url):
     if request.method == 'GET':
         form = SetPasswordForm()
         return render(request, 'set_pwd.html')
@@ -105,7 +108,7 @@ def set_password(request):
 
 
 @save_request_url
-def out(request):
+def out(request,last_url):
     if request.method == 'GET':
         del request.session["username"]
         request.session.clear()
