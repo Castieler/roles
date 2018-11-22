@@ -14,9 +14,12 @@
             {% for v in item.children %}
                 <li>
                     {% if v.active %}
-                        <a href="{{ v.url }}" id="active" >
-                            {{ v.feature }}
-                        </a>
+
+
+                            <a href="{{ v.url }}" id="active" >
+                                {{ v.feature }}
+                            </a>
+
                     {% else %}
                         <a href="{{ v.url }}">
                             {{ v.feature }}

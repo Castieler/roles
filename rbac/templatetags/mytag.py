@@ -22,10 +22,10 @@ def menu_html(request):
         menu_title = item['menu_title']
         title = item['feature']
         url = item['url']
-
+        display = item['display']
         regex_url = f'^{item["url"]}$'
-        if not item['group_menu']:
-            menu_dict[item['id']] = item
+        if not display:
+            continue
         if match(pattern=regex_url, string=current_url):
             item['active'] = True
         else:
@@ -47,3 +47,5 @@ def menu_html(request):
             }
     print(menu_dict)
     return {'menu_dict': menu_dict}
+
+

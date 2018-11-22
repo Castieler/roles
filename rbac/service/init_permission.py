@@ -16,11 +16,21 @@ def init_permission(user, request):
     permissions = user.roles.values("permissions__url",
                                     "permissions__feature",
                                     "permissions__id",
-                                    "permissions__group_menu",
+                                    "permissions__display",
+                                    # "permissions__group_menu",
                                     "permissions__group__menu__id",
-                                    "permissions__group__menu__title")
+                                    "permissions__group__menu__title"
 
+                                    )
 
+    # permissions = user.roles.permissions.values("url",
+    #                                 "feature",
+    #                                 "id",
+    #                                 # "permissions__group_menu",
+    #                                 "group__menu__id",
+    #                                 "group__menu__title")
+
+    print('permissions:', permissions)
 
     # 权限相关
     permission_dict = {"features": [], "urls": []}
@@ -31,16 +41,18 @@ def init_permission(user, request):
 
     # 菜单相关
     menu_list = []
+
     for item in permissions:
         temp = {}
         temp["id"] = item["permissions__id"]
         temp["url"] = item["permissions__url"]
         temp["feature"] = item["permissions__feature"]
-        temp["group_menu"] = item["permissions__group_menu"]
+        # temp["group_menu"] = item["permissions__group_menu"]
         temp["menu_id"] = item["permissions__group__menu__id"]
         temp["menu_title"] = item["permissions__group__menu__title"]
+        temp['display'] = item['permissions__display']
         menu_list.append(temp)
-
+    print('menu_list:',menu_list)
     request.session[settings.MENU_LIST] = menu_list
 
 

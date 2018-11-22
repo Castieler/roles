@@ -7,15 +7,17 @@ class GroupAdmin(admin.ModelAdmin):
 
 
 class PermissionAdmin(admin.ModelAdmin):
-    list_display = ['id', 'url', 'feature', 'group_menu', 'group']
-
+    list_display = ['id', 'url', 'feature',  'group']
+    # list_editable = ('url',)
 
 class RoleAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', ]
+    list_display = ['id', 'title',]
 
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ['id', 'username', 'password_hash', ]
+    search_fields = ('username',)
+
     def save_model(self, request, obj, form, change):
         """
         Given a model instance save it to the database.

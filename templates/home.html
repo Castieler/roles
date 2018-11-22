@@ -1,18 +1,51 @@
-{% extends 'base.html'%} #继承那个模板
+{% extends 'base.html' %} #继承那个模板
 {% load staticfiles %}
 {% load mytag %}
 
 {% block title %} 权限管理系统
-{% endblock%}
+{% endblock %}
 
 
 
 {% block left %}
-{% menu_html request %}
+    {% menu_html request %}
 
 
 {% endblock %}
-{% block content %} 主页面{% endblock %}
+{% block content %}
+
+    <div class="widget-box">
+        <div class="widget-header widget-header-small">
+            <h5 class="lighter">🔍搜索ES集群</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main">
+                <form class="form-search" action="/list_index/" method="get">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-8">
+                            <div class="input-group">
+                                <input type="text" name="es_name" class="form-control search-query" placeholder="输入ES集群地址 eg: http://10.30.1:20:9200"/>
+                                {{ info }}
+                                <span class="input-group-btn">
+																		<button type="submit"
+                                                                                class="btn btn-purple btn-sm">
+																			搜索
+																			<i class="icon-search icon-on-right bigger-110"></i>
+																		</button>
+																	</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
 
 {% block username %} {{ request.session.username }}{% endblock %}
 

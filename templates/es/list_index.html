@@ -1,0 +1,113 @@
+{% extends 'base.html' %} #继承那个模板
+{% load staticfiles %}
+{% load mytag %}
+
+{% block title %} 权限管理系统
+{% endblock %}
+{#{% block lastpage %} <a href={{ url }}>上一页</a> {% endblock %}#}
+
+
+{% block left %}
+    {% menu_html request %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="page-content">
+        <div class="page-header">
+            <h1>
+                Tables
+                <small>
+                    <i class="icon-double-angle-right"></i>
+                    {{ tablename }}
+                </small>
+            </h1>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="table-responsive">
+                    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th class="center">
+                                <label>
+                                    <input type="checkbox" class="ace"/>
+                                    <span class="lbl"></span>
+                                </label>
+                            </th>
+                            <th>index</th>
+                            <th>health</th>
+                            <th class="hidden-480">pri</th>
+                            <th class="hidden-480">rep</th>
+                            <th class="hidden-480">docs_count</th>
+                            <th class="hidden-480">docs_deleted</th>
+                            <th class="hidden-480">store_size</th>
+                            <th class="hidden-480">pri_store_size</th>
+
+                            <th class="hidden-480">Status</th>
+
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for item in es_index %}
+                            <tr>
+                                <td class="center">
+                                    <label>
+                                        <input type="checkbox" class="ace"/>
+                                        <span class="lbl"></span>
+                                    </label>
+                                </td>
+
+
+                                <td>
+                                    <a href="/list_type/{{ item.index }}/">{{ item.index }}</a>
+                                </td>
+                                <td class="hidden-480">
+                                    {% if item.health == 'green' %}
+                                        <span class="label label-sm label-success">{{ item.health }}</span>
+                                    {% elif item.health == 'yellow' %}
+                                        <span class="label label-sm label-warning">{{ item.health }}</span>
+                                    {% elif item.health == 'red' %}
+                                        <span class="label label-sm label-inverse arrowed-in">{{ item.health }}</span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="hidden-480">{{ item.pri }}</td>
+                                <td class="hidden-480">{{ item.rep }}</td>
+                                <td class="hidden-480">{{ item.docs_count }}</td>
+                                <td class="hidden-480">{{ item.docs_deleted }}</td>
+                                <td class="hidden-480">{{ item.store_size }}</td>
+                                <td class="hidden-480">{{ item.pri_store_size }}</td>
+
+
+                                <td class="hidden-480">
+                                    {% if item.status == "open" %}
+                                        <span class="label label-sm label-success">{{ item.status }}</span>
+                                    {% else %}
+                                        <span class="label label-sm label-inverse arrowed-in">{{ item.status }}</span>
+                                    {% endif %}
+
+                                </td>
+
+
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div><!-- /.table-responsive -->
+            </div><!-- /span -->
+        </div><!-- /row -->
+
+    </div>
+
+
+
+
+
+{% endblock %}
+
+{% block username %} {{ request.session.username }}{% endblock %}
+
+{% block head_menu_name %} 查询es索引 {% endblock %}

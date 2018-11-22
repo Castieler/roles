@@ -14,14 +14,6 @@ class User(models.Model):
     username = models.CharField(max_length=16, verbose_name='用户名')
     password_hash = models.CharField(max_length=100, verbose_name='登录密码')
 
-    @property
-    def password(self):
-        return self.password_hash
-
-
-    @password.setter
-    def password(self, password):
-        self.password_hash = str(generate_password_hash(password))
 
     @staticmethod
     def verify_password(password_hash, password):
@@ -47,7 +39,7 @@ class Role(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=32, verbose_name='角色名')
 
-    permissions = models.ManyToManyField(to='Permission', verbose_name='角色拥有的权限')
+    permissions = models.ManyToManyField(to='Permission', verbose_name='请选择角色拥有的权限：')
 
     def __str__(self):
         return self.title
@@ -67,8 +59,8 @@ class Permission(models.Model):
     id = models.AutoField(primary_key=True)
     url = models.CharField(max_length=64, verbose_name='权限url路径')
     feature = models.CharField(max_length=16, verbose_name='权限对应功能')
-
-    group_menu = models.ForeignKey(to='Permission', to_field='id', verbose_name='组内菜单', null=True, blank=True, on_delete=models.CASCADE)
+    display = models.BooleanField(default=True, verbose_name='权限是否显示在菜单栏(true:显示，flase:不显示)')
+    # group_menu = models.ForeignKey(to='Permission', to_field='id', verbose_name='组内菜单', null=True, blank=True, on_delete=models.CASCADE)
     group = models.ForeignKey(to='Group', to_field='id', verbose_name='所属权限组', on_delete=models.CASCADE)
 
     def __str__(self):

@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'hil-+d*hy%a_n03m6n1%&8yd(n7c)&!^8$_b@id=f9z=39fa94'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -52,8 +52,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'rbac.middlewares.loginmd.LoginMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 
 ]
+
+
 
 ROOT_URLCONF = 'version3.urls'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
@@ -131,6 +134,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfile')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static', 'rbac'),
@@ -143,6 +148,7 @@ VALID_URLS = [
     '^/admin.*/$',
     '^/set_pwd.*/$',
     '^/out.*/$',
+    '^/create_table.*/$',
 ]
 
 # permission dict
@@ -152,3 +158,13 @@ PERMISSION_DICT = 'permission dict'
 MENU_LIST = 'menu list'
 
 FEATURE_LIST = "feature list"
+
+
+CACHE_MIDDLEWARE_SECONDS = 10  #设置超时时间 10秒
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache'), #设置缓存文件的目录
+    }
+}

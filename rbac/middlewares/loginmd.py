@@ -1,3 +1,6 @@
+from django.shortcuts import render_to_response, render
+
+
 class MiddlewareMixin(object):
     def __init__(self, get_response=None):
         self.get_response = get_response
@@ -30,6 +33,7 @@ class LoginMiddleware(MiddlewareMixin):
         # 白名单验证
         current_url = request.path_info
         for regex_url in settings.VALID_URLS:
+
             if match(pattern=regex_url, string=current_url):
                 return None
 
@@ -57,4 +61,7 @@ class LoginMiddleware(MiddlewareMixin):
                 break
 
         if not flag:
-            return HttpResponse("你没有权限访问该操作")
+            return render(request, 'error/404.html')
+
+        # if not flag:
+        #     return HttpResponse("你没有权限访问该操作")
