@@ -54,6 +54,7 @@ def init_permission(user, request):
         menu_list.append(temp)
     print('menu_list:',menu_list)
     request.session[settings.MENU_LIST] = menu_list
+    request.session['url'] = request.path_info
 
 
 
