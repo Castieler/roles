@@ -1,3 +1,4 @@
+#coding:utf-8
 ES_INDEX_URL = '{es_url}' + '/_cat/indices?v'
 ES_TYPE_URL = '{es_url}' + "/_mapping?pretty=true"
 ES_NODES = 'escuster.vip.xywy.com'

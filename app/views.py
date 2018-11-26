@@ -1,3 +1,4 @@
+#coding:utf-8
 import requests
 import json
 import traceback
@@ -8,6 +9,7 @@ from rbac import models
 from rbac.service.init_permission import init_permission
 from conf import es_conf
 from django.views.decorators.cache import cache_page  # 导入设置缓存的装饰器
+from django.conf import settings
 
 
 def validate(fun):
@@ -48,10 +50,14 @@ def login(request):
             if models.User().verify_password(password_hash, password):
                 _user_queryset = models.User.objects.filter(username=username)
                 request.session['username'] = str(_user_queryset[0])
-                print('sss123')
                 init_permission(_user_queryset[0], request)
-
-                return redirect('/home/')
+                _url_list = []
+                for item in request.session[settings.MENU_LIST]:
+                    _url_list.append(item['url'])
+                if '/home/' in _url_list:
+                    return redirect('/home/')
+                else:
+                    return redirect(_url_list[0])
             else:
                 return render(request, 'login.html', {"info": "密码错误"})
         else:
@@ -90,9 +96,8 @@ def regist(request):
 
 @cache_page(100)
 @save_request_url
-def set_password(request,last_url):
+def set_password(request,):
     if request.method == 'GET':
-        form = SetPasswordForm()
         return render(request, 'set_pwd.html')
     elif request.method == 'POST':
         form = SetPasswordForm(data=request.POST)
@@ -198,12 +203,13 @@ def list_field(request, last_url, es_index, es_type):
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from lib.python_hive import cur
+from lib.python_hive import HiveCon
 import traceback
 
 
 @csrf_exempt
 def create_table(request):
+    hive_con = HiveCon()
     if request.method == 'POST':
 
         postBody = request.body.decode()
@@ -217,8 +223,8 @@ def create_table(request):
         select_hql = 'show create table ' + table_name
         print('select_hql', select_hql)
         try:
-            cur.execute(select_hql)
-            res = cur.fetchall()
+            hive_con.cur.execute(select_hql)
+            res = hive_con.cur.fetchall()
             print('---')
             return JsonResponse({"result": 2, "msg": "此表名已存在！！！"})
         except Exception as e:
@@ -236,7 +242,7 @@ def create_table(request):
             hql = es_conf.HIVE_SQL_BASE.format(es_nodes=es_conf.ES_NODES, index=index, type=type, table_name=table_name,
                                                field_str=_field_str)
             print(hql)
-            cur.execute(hql)
+            hive_con.cur.execute(hql)
             return JsonResponse({"result": 0, "msg": "创建成功"})
         except Exception as e:
             # traceback.print_exc()
@@ -248,8 +254,8 @@ from django.shortcuts import render_to_response
 
 
 def page_not_found(request):
-    return render_to_response('error/404.html')
+    return render(request, 'error/404.html')
 
 
 def page_error(request):
-    return render_to_response('error/500.html')
+    return render(request, 'error/500.html')

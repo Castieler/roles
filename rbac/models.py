@@ -1,3 +1,4 @@
+#coding:utf-8
 from django.db import models
 # 密码散列及校验
 from werkzeug.security import generate_password_hash, check_password_hash

@@ -1,0 +1,86 @@
+{% extends 'base.html' %} #继承那个模板
+{% load staticfiles %}
+{% load mytag %}
+
+{% block title %} 权限管理系统
+{% endblock %}
+
+
+
+{% block left %}
+    {% menu_html request %}
+
+
+{% endblock %}
+{% block content %}
+
+
+						<div class="page-header">
+							<h1>
+								上传Excel文件
+								<small>
+									<i class="icon-double-angle-right"></i>
+                                    文件拖拽上传
+								</small>
+							</h1>
+						</div><!-- /.page-header -->
+
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+
+
+									<form action="/upload/" method="post" class="col-md-offset-5" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <span style="color: crimson">{{ info }}</span>
+											<input name="file" type="file"  multiple="" />
+                                            <button class="btn btn-app btn-purple btn-sm " type="submit">
+												<i class="icon-cloud-upload bigger-200"></i>
+												Upload
+											</button>
+									</form>
+
+
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+
+
+
+
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+
+			jQuery(function($){
+
+			try {
+			  $(".dropzone").dropzone({
+			    paramName: "file", // The name that will be used to transfer the file
+			    maxFilesize: 0.5, // MB
+
+				addRemoveLinks : true,
+				dictDefaultMessage :
+				'<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> Drop files</span> to upload \
+				<span class="smaller-80 grey">(or click)</span> <br /> \
+				<i class="upload-icon icon-cloud-upload blue icon-3x"></i>'
+			,
+				dictResponseError: 'Error while uploading file!',
+
+				//change the previewTemplate to use Bootstrap progress bars
+				previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
+			  });
+			} catch(e) {
+			  alert('Dropzone.js does not support older browsers!');
+			}
+
+			});
+		</script>
+		<script src="{% static 'assets/js/dropzone.min.js' %}"></script>
+
+
+{% endblock %}
+{% block username %} {{ request.session.username }}{% endblock %}
+
+{% block head_menu_name %} 文件上传 {% endblock %}

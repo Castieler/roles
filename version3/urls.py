@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from app import views
+from upload_file import views as u_views
 from django.views import static
 from . import settings
 from django.conf.urls import handler404, handler500
@@ -33,6 +34,13 @@ urlpatterns = [
     url(r'^list_type/(\w+)/', views.list_type),
     url(r'^list_field/(\w+)/(\w+)/', views.list_field),
     url(r'^create_table/', views.create_table),
+    url(r'^upload/',u_views.handle_file),
+
+
+
+
     url(r'^static/(?P<path>.*)$', static.serve,
         {'document_root': settings.STATIC_ROOT}, name='static'),
 ]
+handler404 = views.page_not_found
+handler500 = views.page_error

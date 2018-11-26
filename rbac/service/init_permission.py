@@ -1,3 +1,4 @@
+#coding:utf-8
 from django.conf import settings
 from re import match
 
@@ -30,7 +31,6 @@ def init_permission(user, request):
     #                                 "group__menu__id",
     #                                 "group__menu__title")
 
-    print('permissions:', permissions)
 
     # 权限相关
     permission_dict = {"features": [], "urls": []}
@@ -52,7 +52,6 @@ def init_permission(user, request):
         temp["menu_title"] = item["permissions__group__menu__title"]
         temp['display'] = item['permissions__display']
         menu_list.append(temp)
-    print('menu_list:',menu_list)
     request.session[settings.MENU_LIST] = menu_list
     request.session['url'] = request.path_info
 

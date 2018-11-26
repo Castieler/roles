@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from celery import Celery
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -38,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app.apps.AppConfig',
     'rbac.apps.RbacConfig',
+    'upload_file.apps.UploadFileConfig',
+    'djcelery'
 
 ]
 
@@ -90,11 +94,11 @@ DATABASES = {
     # },
 'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_role', #数据库名称
-        'USER': 'xiamingyu',#用户名
-        'PASSWORD': 'xiamingyu', #密码
-        'HOST': '10.30.1.22', #地址
-        'PORT': '3555', #端口
+        'NAME': 'django_role',
+        'USER': 'xiamingyu',
+        'PASSWORD': 'xiamingyu',
+        'HOST': '10.30.1.22',
+        'PORT': '3555',
         'CHARSET': 'utf8',
         'COLLATION': 'utf8_general_ci',}
 }
@@ -134,14 +138,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfile')
-
+# PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+# STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfile')
+STATIC_ROOT = os.path.join(BASE_DIR,'/static/', '/rbac/')
+print('STATIC_ROOT:', STATIC_ROOT)
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static', 'rbac'),
 ]
 
-# 白名单
+
 VALID_URLS = [
     '^/login/$',
     '^/regist/$',
@@ -160,11 +165,18 @@ MENU_LIST = 'menu list'
 FEATURE_LIST = "feature list"
 
 
-CACHE_MIDDLEWARE_SECONDS = 10  #设置超时时间 10秒
+CACHE_MIDDLEWARE_SECONDS = 10
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'cache'), #设置缓存文件的目录
+        'LOCATION': os.path.join(BASE_DIR, 'cache'),
     }
 }
+
+
+import djcelery
+djcelery.setup_loader()
+BROKER_URL= 'amqp://guest@localhost//'
+CELERY_RESULT_BACKEND = 'amqp://guest@localhost//'
+app = Celery('tasks', backend='amqp://guest@localhost//', broker='amqp://guest@localhost//')
