@@ -1,6 +1,6 @@
 import os
 import time
-
+from upload_file import models
 from celery import task
 from subprocess import call
 from lib.send_email import sendEmail
@@ -13,12 +13,12 @@ def linux_shell(excel_name):
     # sendEmail('灌贴项目', 'test')
     _dict = read_excel(excel_name)
     print('生成txt文件')
-    data_str_list = _dict['date_list']
+    date_str_list = _dict['date_list']
     print('开始执行脚本')
-    for data_str in data_str_list:
-        # call("/bin/bash /data/git/hadoop_mining/data_mining/code/sh_python/guantie_everyday/crawl_for_daily_guantie.sh "+ data_str +" 1 > crawl_for_daily_guantie.sh.log 2>&1", shell=True)
+    for date_str in date_str_list:
+        # call("/bin/bash /data/git/hadoop_mining/data_mining/code/sh_python/guantie_everyday/crawl_for_daily_guantie.sh "+ date_str +" 1 > crawl_for_daily_guantie.sh.log 2>&1", shell=True)
         call(
-            "/bin/bash /data/git/hadoop_mining/data_mining/code/sh_python/guantie_everyday/test.sh " + data_str + " 1 > crawl_for_daily_guantie.sh.log 2>&1",
+            "/bin/bash /data/git/hadoop_mining/data_mining/code/sh_python/guantie_everyday/test.sh " + date_str + " 1 > crawl_for_daily_guantie.sh.log 2>&1",
             shell=True)
     print('----------------------------执行结束----------------------------')
     time_num = 0
@@ -29,21 +29,27 @@ def linux_shell(excel_name):
             break
         _str = ''
         flag = True
-        for data_str in data_str_list:
-            log_path = '/data/logs/tmp_log/guantie_everyday_result/crawl_' + data_str +'.txt'
+        for date_str in date_str_list:
+            log_path = '/data/logs/tmp_log/guantie_everyday_result/crawl_' + date_str + '.txt'
             if os.path.isfile(log_path):
                 res = os.popen('wc -l {log_path}'.format(log_path=log_path)).readlines()
                 line_num = res[0].strip().split(' ')[0]
-                if len(data_str_list) == 1:
+                txt_name = '/data/git/hadoop_mining/data_mining/tempfiles/keywords_detail_{date_str}.txt'
+                models.Txt.objects.filter(txt_name=txt_name.format(date_str=date_str)).update(txt_result=line_num)
+                if len(date_str_list) == 1:
                     _str += ' 数据量:' + str(line_num) + '\n'
                 else:
-                    _str += data_str + ' 数据量:'+str(line_num) + '\n'
+                    _str += date_str + ' 数据量:' + str(line_num) + '\n'
             else:
-                print('此文件不存在：',log_path)
+                print('此文件不存在：', log_path)
                 flag = False
         time_num += 1
         if flag:
-            sendEmail('灌贴项目', '数据已处理并提供，对应数据：\n'+ _str )
+            file_list = _dict['txt']
+            for txt_name in file_list:
+                res = models.Txt.objects.get(txt_name=txt_name)
+                models.File.objects.filter(txt=res).update(flag=True)
+            sendEmail('灌贴项目', '数据已处理并提供，对应数据：\n' + _str)
             break
         else:
             time.sleep(30)

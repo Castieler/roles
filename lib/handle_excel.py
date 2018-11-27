@@ -56,12 +56,18 @@ def read_excel(_path):
             t.write(string+'\n')
         t.close()
         tomorrow = tomorrow + datetime.timedelta(days=1)
-    txt_queryset = models.Txt.objects.filter(txt_name=file_2)
+
     for txt_name in file_list:
+        txt_queryset = models.Txt.objects.filter(txt_name=txt_name)
         if not txt_queryset:
             models.Txt.objects.create(txt_name=txt_name)
         res = models.Txt.objects.get(txt_name=txt_name)
-        models.File.objects.create(excel_name=_path, sheet_num=len(file_list), txt=res)
+        file_queryset = models.File.objects.filter(txt=res)
+        if not file_queryset:
+            models.File.objects.create(excel_name=_path, sheet_num=len(file_list), txt=res)
+
+
+
     return {'excel': _path, 'txt': file_list,'date_list': date_list}
 if __name__ == '__main__':
     read_excel('a.xlsx')

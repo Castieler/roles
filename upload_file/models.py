@@ -13,7 +13,7 @@ class File(models.Model):
     sheet_num = models.IntegerField(verbose_name='包含的sheet数')
     flag = models.BooleanField(max_length=32, default=False, verbose_name='执行状态')
     date = models.DateTimeField(auto_now_add=True, verbose_name='上传时间')
-    txt = models.ForeignKey(to='Txt', to_field='id', verbose_name='对应生成的txt', on_delete=models.CASCADE)
+    txt = models.ForeignKey(to='Txt', to_field='id', verbose_name='对应生成的txt', on_delete=models.CASCADE,unique=True)
 
     def __str__(self):
         return self.excel_name
