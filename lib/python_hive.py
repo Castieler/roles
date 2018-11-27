@@ -18,16 +18,6 @@ if __name__ == '__main__':
     a.cur.execute("show partitions club.query_detail_temp")
     res = a.cur.fetchall()
     print(res[-1][0])
-    # import traceback
-    #
-    # a.cur.execute('ADD jar /usr/local/xywy/apache-hive/TmpJar/elasticsearch-hadoop-2.1.0.Beta3.jar')
-    # try:
-    #     a.cur.execute('SHOW CREATE TABLE asdds')
-    #     res = a.cur.fetchall()
-    #     print(res)
-    # except HiveServer2Error as e:
-    #     # traceback.print_exc()
-    #     print('ss')
-    # print(cur.fetchall())
+
 
 

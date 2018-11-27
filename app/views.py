@@ -10,6 +10,7 @@ from rbac.service.init_permission import init_permission
 from conf import es_conf
 from django.views.decorators.cache import cache_page  # 导入设置缓存的装饰器
 from django.conf import settings
+from lib.last_request_url import save_request_url
 
 
 def validate(fun):
@@ -18,18 +19,6 @@ def validate(fun):
             return fun(request, *args, **kwargs)
         else:
             return redirect('/login')
-    return inner
-
-
-def save_request_url(fun):
-    def inner(request, *args, **kwargs):
-        try:
-            last_url = request.session['url']
-        except:
-            last_url= "/home/"
-        request.session['url'] = request.path_info
-        return fun(request, last_url, *args, **kwargs)
-
     return inner
 
 
@@ -96,7 +85,7 @@ def regist(request):
 
 @cache_page(100)
 @save_request_url
-def set_password(request,):
+def set_password(request, last_url):
     if request.method == 'GET':
         return render(request, 'set_pwd.html')
     elif request.method == 'POST':

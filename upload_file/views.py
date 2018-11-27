@@ -3,8 +3,11 @@ from django.shortcuts import render
 from lib.handle_upload_file import handle_uploaded_file
 from lib.email_of_exception import sendEmail as exception_sendEmail
 from upload_file.task import linux_shell
-# Create your views here.
-def handle_file(request):
+from lib.last_request_url import save_request_url
+
+
+@save_request_url
+def handle_file(request, *args):
     if request.method == 'GET':
         return render(request, 'upload_file/upload.html')
     elif request.method == 'POST':

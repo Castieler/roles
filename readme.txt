@@ -12,7 +12,7 @@ which pip3
 # 启动celery（执行异步任务）
 安装： /data/hadoop/apps/test.admin.dm.xywy.com/venv1/bin/pip3 install celery
          /data/hadoop/apps/test.admin.dm.xywy.com/venv1/bin/pip3 install celery django-celery
- 启动  nohup /data/hadoop/apps/test.admin.dm.xywy.com/venv1/bin/python manage.py celery worker -c 4 --loglevel=info >celery.log 2>&1 &
+ 启动  nohup /data/hadoop/apps/test.admin.dm.xywy.com/venv1/bin/python manage.py celery worker -c 1 --loglevel=info >celery.log 2>&1 &
 
  # 异步任务界面
  安装：/data/hadoop/apps/test.admin.dm.xywy.com/venv1/bin/pip3 install flower

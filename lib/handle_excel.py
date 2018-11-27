@@ -16,6 +16,7 @@ else:
 
 def read_excel(_path):
     # 打开文件
+    status = True
     workbook = xlrd.open_workbook(_path)
     for i in range(3):
         try:
@@ -31,6 +32,8 @@ def read_excel(_path):
             exception = traceback.format_exc()
             traceback.print_exc()
             if i == 3:
+                status = False
+                raise Exception('尝试三次连接hive，连接hive异常')
                 exception_sendEmail(title='尝试三次连接hive，依然失败', content=exception)
     file_list = []
     date_list = []
