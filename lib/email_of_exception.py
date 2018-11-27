@@ -1,5 +1,4 @@
 import smtplib
-from email.header import Header
 from email.mime.text import MIMEText
 
 # 第三方 SMTP 服务
@@ -9,7 +8,7 @@ mail_pass = "Hello1234"  # 授权密码，非登录密码
 
 sender = 'xiamingyu@xywy.com'  # 发件人邮箱(最好写全, 不然会失败)
 receivers = ['1083298593@qq.com','1277338682@qq.com']  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
-cc_reciver = ''.join(['1277338682@qq.com'])
+cc_reciver = ''.join(['1277338682@qq.com','xiamingyu@xywy.com'])
 content = '我用Python'
 title = 'djongo项目异常'  # 邮件主题
 

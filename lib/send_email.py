@@ -1,5 +1,4 @@
 import smtplib
-from email.header import Header
 from email.mime.text import MIMEText
 
 # 第三方 SMTP 服务
@@ -8,10 +7,11 @@ mail_user = "xiamingyu@xywy.com"  # 用户名
 mail_pass = "Hello1234"  # 授权密码，非登录密码
 
 sender = 'xiamingyu@xywy.com'  # 发件人邮箱(最好写全, 不然会失败)
-receivers = ['1083298593@qq.com',
-             # 'liuyujing@xywy.com','liuyipeng@xywy.com','maningbo@xywy.com','liangyanyan@xywy.com','wangxinyi@xywy.com'
+receivers = [
+            'xiamingyu@xywy.com','1083298593@qq.com',
+             # 'liuyujing@xywy.com','liuyipeng@xywy.com','maningbo@xywy.com','liangyanyan@xywy.com', 'wangxinyi@xywy.com','xiamingyu@xywy.com'
              ]  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
-cc_reciver = ','.join(['jiangyuanxi@xywy.com','yangyuqun@xywy.com'])
+cc_reciver = ','.join(['jiangyuanxi@xywy.com', 'yangyuqun@xywy.com'])
 
 
 def sendEmail(title, content):

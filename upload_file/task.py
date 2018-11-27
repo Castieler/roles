@@ -3,29 +3,31 @@ import time
 from upload_file import models
 from celery import task
 from subprocess import call
-from lib.send_email import sendEmail
+from lib.email_of_exception import sendEmail as exception_sendEmail
+from lib.send_email import sendEmail as work_email
 from lib.handle_excel import read_excel
 
 
 @task
 def linux_shell(excel_name):
-    # time.sleep(40)
-    # sendEmail('灌贴项目', 'test')
     _dict = read_excel(excel_name)
     print('生成txt文件')
     date_str_list = _dict['date_list']
     print('开始执行脚本')
+    exception_sendEmail('开始执行脚本', '开始执行脚本')
     for date_str in date_str_list:
-        # call("/bin/bash /data/git/hadoop_mining/data_mining/code/sh_python/guantie_everyday/crawl_for_daily_guantie.sh "+ date_str +" 1 > crawl_for_daily_guantie.sh.log 2>&1", shell=True)
-        call(
-            "/bin/bash /data/git/hadoop_mining/data_mining/code/sh_python/guantie_everyday/test.sh " + date_str + " 1 > crawl_for_daily_guantie.sh.log 2>&1",
-            shell=True)
+        call("/bin/bash /data/git/hadoop_mining/data_mining/code/sh_python/guantie_everyday/crawl_for_daily_guantie.sh " + date_str + " 1 > crawl_for_daily_guantie.sh.log 2>&1", shell=True)
+        # call(
+        #     "/bin/bash /data/git/hadoop_mining/data_mining/code/sh_python/guantie_everyday/test.sh " + date_str + " 1 > crawl_for_daily_guantie.sh.log 2>&1",
+        #     shell=True)
     print('----------------------------执行结束----------------------------')
+    exception_sendEmail('脚本执行结束', '脚本执行结束')
     time_num = 0
+    time.sleep(4)
     while 1:
         print('执行循环')
         if time_num == 300:
-            sendEmail('crawl_文件读取失败', 'crawl_文件读取失败')
+            exception_sendEmail('crawl_文件读取失败', 'crawl_文件读取失败')
             break
         _str = ''
         flag = True
@@ -44,13 +46,14 @@ def linux_shell(excel_name):
                 print('此文件不存在：', log_path)
                 flag = False
         time_num += 1
+        exception_sendEmail('crawl_文件读取完成', _str)
         if flag:
             file_list = _dict['txt']
             for txt_name in file_list:
                 res = models.Txt.objects.get(txt_name=txt_name)
                 models.File.objects.filter(txt=res).update(flag=True)
-            sendEmail('灌贴项目', '数据已处理并提供，对应数据：\n' + _str)
+            work_email('灌贴项目', '数据已处理并提供，对应数据：\n' + _str)
             break
         else:
-            time.sleep(30)
+            time.sleep(10)
             continue

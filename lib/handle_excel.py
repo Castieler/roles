@@ -2,7 +2,7 @@
 import os
 import platform
 from upload_file import models
-from .email_of_exception import sendEmail
+from .email_of_exception import sendEmail as exception_sendEmail
 import xlrd
 import xlwt
 import datetime
@@ -17,15 +17,21 @@ else:
 def read_excel(_path):
     # 打开文件
     workbook = xlrd.open_workbook(_path)
-    try:
-        hive_con.cur.execute("show partitions club.query_detail_temp")
-        res = hive_con.cur.fetchall()
-        startdate = datetime.datetime.strptime(res[-1][0].replace('time=', ''), "%Y-%m-%d")
-        tomorrow = startdate + datetime.timedelta(days=1)
-    except Exception as e:
-        exception = traceback.format_exc()
-        traceback.print_exc()
-        sendEmail(title='hive服务挂了', content=exception)
+    for i in range(3):
+        try:
+            hive_con.cur.execute("show partitions club.query_detail_temp")
+            res = hive_con.cur.fetchall()
+            startdate = datetime.datetime.strptime(res[-1][0].replace('time=', ''), "%Y-%m-%d")
+            # 控制时间
+            # tomorrow = startdate + datetime.timedelta(days=1)
+            tomorrow = startdate
+            print('tomorrow:',tomorrow)
+            break
+        except Exception as e:
+            exception = traceback.format_exc()
+            traceback.print_exc()
+            if i == 3:
+                exception_sendEmail(title='尝试三次连接hive，依然失败', content=exception)
     file_list = []
     date_list = []
     for sheet_name in workbook.sheet_names():
@@ -66,8 +72,7 @@ def read_excel(_path):
         if not file_queryset:
             models.File.objects.create(excel_name=_path, sheet_num=len(file_list), txt=res)
 
-
-
+    exception_sendEmail('已经生产对应TXT文件','')
     return {'excel': _path, 'txt': file_list,'date_list': date_list}
 if __name__ == '__main__':
     read_excel('a.xlsx')
