@@ -15,35 +15,74 @@
 {% block content %}
 
 
-						<div class="page-header">
-							<h1>
-								上传Excel文件
-								<small>
-									<i class="icon-double-angle-right"></i>
-                                    文件上传
-								</small>
-							</h1>
-						</div><!-- /.page-header -->
+    <div class="page-header">
+        <h1>
+            每日灌贴
+            <small>
+                <i class="icon-double-angle-right"></i>
+                文件上传
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
 
-						<div class="row">
-							<div class="col-xs-12">
-								<!-- PAGE CONTENT BEGINS -->
-
-
-									<form action="/upload/" method="post" class="col-md-offset-5" enctype="multipart/form-data">
-                                            {% csrf_token %}
-                                            <span style="color: crimson">{{ info }}</span>
-											<input name="file" type="file"  multiple="" />
-                                            <button class="btn btn-app btn-purple btn-sm " type="submit">
-												<i class="icon-cloud-upload bigger-200"></i>
-												Upload
-											</button>
-									</form>
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
 
 
-							</div><!-- /.col -->
-						</div><!-- /.row -->
+            <form action="/upload/" method="post" class="col-md-offset-5" enctype="multipart/form-data" {% if task == 'true' %}style="display: none" {% endif %}>
+                {% csrf_token %}
+                <span style="color: crimson">{{ info }}</span>
+                <input name="file" type="file" multiple=""/>
+                <button class="btn btn-app btn-purple btn-sm " type="submit">
+                    <i class="icon-cloud-upload bigger-200"></i>
+                    Upload
+                </button>
+            </form>
+            {% if task == 'true' %}<blockquote>
+                                    <p>正在灌贴.....</p>
 
+                                </blockquote> {% endif %}
+
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+    <hr>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat">
+                    <h4 class="smaller">
+                        <i class="icon-quote-left smaller-80"></i>
+                        灌贴说明
+                    </h4>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main">
+
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <blockquote>
+                                    <p>1.每日灌贴上传文件格式为:xlsx（其他格式不作处理）</p>
+                                    <p>2.每日灌贴上传文件单个sheet一共四列： 关键词  一级科室id 二级科室id 疾病</p>
+                                    <p>3.如需多个日期灌贴，xlsx文件里用多个sheet区分</p>
+                                    <p>4.灌贴结束后有邮件通知</p>
+                                    <small>
+                                        灌贴说明
+                                    </small>
+                                </blockquote>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 
 
@@ -53,31 +92,31 @@
 {% block js %}
     <script type="text/javascript">
 
-			jQuery(function($){
+        jQuery(function ($) {
 
-			try {
-			  $(".dropzone").dropzone({
-			    paramName: "file", // The name that will be used to transfer the file
-			    maxFilesize: 0.5, // MB
+            try {
+                $(".dropzone").dropzone({
+                    paramName: "file", // The name that will be used to transfer the file
+                    maxFilesize: 0.5, // MB
 
-				addRemoveLinks : true,
-				dictDefaultMessage :
-				'<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> Drop files</span> to upload \
-				<span class="smaller-80 grey">(or click)</span> <br /> \
-				<i class="upload-icon icon-cloud-upload blue icon-3x"></i>'
-			,
-				dictResponseError: 'Error while uploading file!',
+                    addRemoveLinks: true,
+                    dictDefaultMessage:
+                        '<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> Drop files</span> to upload \
+                        <span class="smaller-80 grey">(or click)</span> <br /> \
+                        <i class="upload-icon icon-cloud-upload blue icon-3x"></i>'
+                    ,
+                    dictResponseError: 'Error while uploading file!',
 
-				//change the previewTemplate to use Bootstrap progress bars
-				previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
-			  });
-			} catch(e) {
-			  alert('Dropzone.js does not support older browsers!');
-			}
+                    //change the previewTemplate to use Bootstrap progress bars
+                    previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
+                });
+            } catch (e) {
+                alert('Dropzone.js does not support older browsers!');
+            }
 
-			});
-		</script>
-		<script src="{% static 'assets/js/dropzone.min.js' %}"></script>
+        });
+    </script>
+    <script src="{% static 'assets/js/dropzone.min.js' %}"></script>
 
 
 {% endblock %}

@@ -6,6 +6,7 @@ from subprocess import call
 from lib.email_of_exception import sendEmail as exception_sendEmail
 from lib.send_email import sendEmail as work_email
 from lib.handle_excel import read_excel
+from lib.redis_con import redis_conn
 
 
 @task
@@ -16,7 +17,7 @@ def linux_shell(excel_name):
     print('开始执行脚本')
     exception_sendEmail('开始执行脚本', '开始执行脚本')
     for date_str in date_str_list:
-        call("/bin/bash /data/git/hadoop_mining/data_mining/code/sh_python/guantie_everyday/crawl_for_daily_guantie.sh " + date_str + " 1 > crawl_for_daily_guantie.sh.log 2>&1", shell=True)
+        call("/bin/bash /data/git/hadoop_mining/data_mining/code/sh_python/guantie_everyday/crawl_for_daily_guantie.sh " + date_str + " 1 > crawl_for_daily_guantie.sh.log ", shell=True)
         # call(
         #     "/bin/bash /data/git/hadoop_mining/data_mining/code/sh_python/guantie_everyday/test.sh " + date_str + " 1 > crawl_for_daily_guantie.sh.log 2>&1",
         #     shell=True)
@@ -52,7 +53,8 @@ def linux_shell(excel_name):
             for txt_name in file_list:
                 res = models.Txt.objects.get(txt_name=txt_name)
                 models.File.objects.filter(txt=res).update(flag=True)
-            work_email('灌贴项目', '数据已处理并提供，对应数据：\n' + _str)
+            redis_conn.set('DataMingManage-task', 'false')
+            # work_email('灌贴项目', '数据已处理并提供，对应数据：\n' + _str)
             break
         else:
             time.sleep(10)

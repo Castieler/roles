@@ -16,7 +16,6 @@ else:
 
 def read_excel(_path):
     # 打开文件
-    status = True
     workbook = xlrd.open_workbook(_path)
     for i in range(3):
         try:
@@ -24,17 +23,15 @@ def read_excel(_path):
             res = hive_con.cur.fetchall()
             startdate = datetime.datetime.strptime(res[-1][0].replace('time=', ''), "%Y-%m-%d")
             # 控制时间
-            # tomorrow = startdate + datetime.timedelta(days=1)
-            tomorrow = startdate
+            tomorrow = startdate + datetime.timedelta(days=1)
+            # tomorrow = startdate
             print('tomorrow:',tomorrow)
             break
         except Exception as e:
-            exception = traceback.format_exc()
             traceback.print_exc()
             if i == 3:
-                status = False
                 raise Exception('尝试三次连接hive，连接hive异常')
-                exception_sendEmail(title='尝试三次连接hive，依然失败', content=exception)
+                exception_sendEmail(title='尝试三次连接hive，依然失败', content=traceback.format_exc())
     file_list = []
     date_list = []
     for sheet_name in workbook.sheet_names():

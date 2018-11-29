@@ -140,7 +140,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfile')
-STATIC_ROOT = os.path.join(BASE_DIR,'/static/', '/rbac/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfile')
 print('STATIC_ROOT:', STATIC_ROOT)
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static', 'rbac'),
@@ -176,7 +176,19 @@ CACHES = {
 
 
 import djcelery
+import platform
 djcelery.setup_loader()
+#
+# if platform.system() == 'Darwin':
+#     BROKER_URL= 'amqp://guest@localhost//'
+#     CELERY_RESULT_BACKEND = 'amqp://guest@localhost//'
+#     app = Celery('tasks', backend=BROKER_URL, broker=CELERY_RESULT_BACKEND)
+#
+# else:
+#     BROKER_URL= 'redis://10.30.1.23:6379/0'
+#     CELERY_RESULT_BACKEND = 'redis://10.30.1.23:6379/0'
+#     app = Celery('test',backend=BROKER_URL,broker=BROKER_URL)
+
 BROKER_URL= 'amqp://guest@localhost//'
 CELERY_RESULT_BACKEND = 'amqp://guest@localhost//'
-app = Celery('tasks', backend='amqp://guest@localhost//', broker='amqp://guest@localhost//')
+app = Celery('tasks', backend=BROKER_URL, broker=CELERY_RESULT_BACKEND)

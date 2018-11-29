@@ -7,14 +7,19 @@ which pip3
 部署到这个目录，代码和日志在一起就可以
 /data/hadoop/apps/test.admin.dm.xywy.com
 
-# nohup /data/hadoop/apps/test.admin.dm.xywy.com/venv1/bin/python manage.py runserver 0.0.0.0:8100 >nohup.log 2>&1 &
+# nohup /data/hadoop/apps/test.admin.dm.xywy.com/venv1/bin/uwsgi uwsgi.ini >nohup.log 2>&1 &
 
 # 启动celery（执行异步任务）
 安装： /data/hadoop/apps/test.admin.dm.xywy.com/venv1/bin/pip3 install celery
          /data/hadoop/apps/test.admin.dm.xywy.com/venv1/bin/pip3 install celery django-celery
  启动  nohup /data/hadoop/apps/test.admin.dm.xywy.com/venv1/bin/python manage.py celery worker -c 1 --loglevel=info >celery.log 2>&1 &
+本地和线上不要同时启动
+
 
  # 异步任务界面
  安装：/data/hadoop/apps/test.admin.dm.xywy.com/venv1/bin/pip3 install flower
  启动：nohup /data/hadoop/apps/test.admin.dm.xywy.com/venv1/bin/python manage.py celery flower >flower.log 2>&1 &
  http://10.20.6.17:5555
+
+
+启动命令： sh start.sh start
